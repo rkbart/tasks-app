@@ -1,0 +1,31 @@
+:root { color-scheme: dark; --bg: #1e1e1e; --fg: #dadada; --dim: #7f7f7f; --acc: #7c5cff; --lh: 24px; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/var(--lh) system-ui, sans-serif; }
+main { max-width: 720px; margin: 0 auto; padding: 48px 20px 96px; }
+h1 { font-size: 22px; font-weight: 600; margin: 0 0 20px; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; line-height: var(--lh); }
+:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+
+.row { display: flex; align-items: flex-start; gap: 6px; padding: 2px 0; border-radius: 6px; }
+.row:hover { background: #252525; }
+.row.ghost { opacity: 0.55; background: #2a2540; }
+
+.grip, .x { width: 18px; color: var(--dim); opacity: 0; }
+.grip { cursor: grab; touch-action: none; }
+.x { font-size: 18px; margin-left: auto; }
+.row:hover .grip, .row:hover .x, .grip:focus-visible, .x:focus-visible { opacity: 1; }
+
+.chev { width: 16px; color: var(--dim); transition: transform 0.12s; }
+.chev.none { visibility: hidden; }
+.chev.shut { transform: rotate(-90deg); }
+
+input[type='checkbox'] { accent-color: var(--acc); width: 16px; height: 16px; margin: 4px 2px 0; flex: none; }
+textarea {
+  flex: 1; resize: none; field-sizing: content; min-height: var(--lh);
+  background: none; border: 0; padding: 0; color: inherit; font: inherit;
+}
+textarea:focus-visible { outline: 0; }
+.done textarea { color: var(--dim); text-decoration: line-through; }
+
+.add { margin-top: 12px; padding: 2px 4px; color: var(--dim); }
+.add:hover { color: var(--fg); }
