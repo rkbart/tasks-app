@@ -29,3 +29,6 @@ textarea:focus-visible { outline: 0; }
 
 .add { margin-top: 12px; padding: 2px 4px; color: var(--dim); }
 .add:hover { color: var(--fg); }
+
+.title { width: 100%; background: none; border: 0; padding: 0; color: inherit; font: inherit; }
+.title:focus-visible { outline: 0; box-shadow: 0 1px 0 var(--acc); }

@@ -6,7 +6,7 @@ import { arrayMove } from '@dnd-kit/sortable'
 // An item's children are the items right after it with a greater depth.
 export type Item = { id: string; depth: number; text: string; done: boolean; collapsed: boolean }
 
-const db = new Dexie('tasks') as Dexie & { kv: Table<{ key: string; value: Item[] }, string> }
+const db = new Dexie('tasks') as Dexie & { kv: Table<{ key: string; value: unknown }, string> }
 db.version(1).stores({ kv: 'key' })
 
 const mk = (text = '', depth = 0): Item => ({ id: crypto.randomUUID(), depth, text, done: false, collapsed: false })
@@ -31,9 +31,11 @@ export function visible(items: Item[], hideUnder?: string | null) {
 
 type S = {
   items: Item[]
+  title: string
   ready: boolean
   focusId: string | null
   load(): Promise<void>
+  setTitle(title: string): void
   add(afterId?: string): void
   update(id: string, patch: Partial<Item>): void
   remove(id: string, whole?: boolean): void
@@ -48,19 +50,26 @@ export const useStore = create<S>()((set, get) => {
   }
   return {
     items: [],
+    title: 'Tasks',
     ready: false,
     focusId: null,
 
     async load() {
-      const row = await db.kv.get('items')
+      const [row, t] = await Promise.all([db.kv.get('items'), db.kv.get('title')])
       set({
         ready: true,
-        items: row?.value ?? [
+        title: (t?.value as string | undefined) ?? 'Tasks',
+        items: (row?.value as Item[] | undefined) ?? [
           mk('Drag the handle on the left to reorder or nest'),
           mk('Tab indents, Shift+Tab outdents', 1),
           mk('Enter adds a task, Backspace on an empty one removes it', 1),
         ],
       })
+    },
+
+    setTitle(title) {
+      set({ title })
+      db.kv.put({ key: 'title', value: title }).catch(console.error)
     },
 
     add(afterId) {
